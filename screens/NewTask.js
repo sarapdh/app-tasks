@@ -9,12 +9,12 @@ const NewTask = ({navigation}) =>{
 
     const[newTask, setNewTask] = useState({
         title:"",
-        descrip :"",
+        descr :""
     })
     const handleCt = (name, value) =>{
-        setNewTask({...NewTask, [name] :value})
+        setNewTask({...newTask, [name] :value})
     }
-    const save = async () =>{
+    const saveTask = async () =>{
         const sendData = {
             title: newTask.title,
             descrip: newTask.descr,
@@ -26,18 +26,18 @@ const NewTask = ({navigation}) =>{
             Accept: "application/json",
             "Content-Type":"application/json",
         },
-        body: JSON.stringify(sendData)
+        body: JSON.stringify(sendData),
     })
     .then((res) => res.json())
     .catch((error)=>{
-        Alert.alert("Error", "No se pudo realizar")
+        Alert.alert("Error", "No");
     }
     )
     .then((response) =>{
         if(response.message == "error"){
-            Alert.alert("Error", "No se pudo realizar")
+            Alert.alert("Error", "No se pudo realizar");
         }else{
-            navigation.navigation("Tareas", {state:true});
+            navigation.navigate("Tareas", {state:true});
         }
     })
     }
@@ -64,9 +64,8 @@ const NewTask = ({navigation}) =>{
                     onChangeText={(value) => handleCt("descr",value)}
                     />
                 </View>
-                <TouchableOpacity style =  {styles.bot} onPress={save}>
+                <TouchableOpacity style =  {styles.bot} onPress={saveTask}>
                     <Text style = {styles.text}>Guardar</Text>
-
                 </TouchableOpacity>
 
             </View>
