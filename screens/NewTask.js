@@ -1,12 +1,10 @@
-import { Text,StyleSheet,TextInput,TouchableOpacity, View, Alert } from "react-native";
+import { Text,StyleSheet,TextInput,TouchableOpacity,Keyboard, View, Alert } from "react-native";
 import React, { useState } from "react";
-import config from "../config";
-
+import { collection, addDoc } from "firebase/firestore";
+import { db } from "../firebase";
 
 const NewTask = ({navigation}) =>{
-
-    const api = config.api;
-
+    
     const[newTask, setNewTask] = useState({
         title:"",
         descr :""
@@ -14,33 +12,23 @@ const NewTask = ({navigation}) =>{
     const handleCt = (name, value) =>{
         setNewTask({...newTask, [name] :value})
     }
+    const cancelTask = () =>{
+        setNewTask({title:"",
+        descr :""})
+    }
     const saveTask = async () =>{
-        const sendData = {
+        const docRef = await addDoc(collection(db, "tasks"), { 
             title: newTask.title,
-            descrip: newTask.descr,
+            description: newTask.descr,
+            completed: false
+        });
+        console.log("Document written with ID: ", docRef.id);
+        setNewTask({title:"",
+        descr :""})
+        navigation.navigate("Tareas", {state:true});
+        Keyboard.dismiss();
         }
 
-        await fetch(api + "new-task.php",{
-        method:"POST",
-        header:{
-            Accept: "application/json",
-            "Content-Type":"application/json",
-        },
-        body: JSON.stringify(sendData),
-    })
-    .then((res) => res.json())
-    .catch((error)=>{
-        Alert.alert("Error", "No");
-    }
-    )
-    .then((response) =>{
-        if(response.message == "error"){
-            Alert.alert("Error", "No se pudo realizar");
-        }else{
-            navigation.navigate("Tareas", {state:true});
-        }
-    })
-    }
     return(
         <View style={styles.container}>
             <View style = {styles.titlecontainer}>
@@ -64,10 +52,14 @@ const NewTask = ({navigation}) =>{
                     onChangeText={(value) => handleCt("descr",value)}
                     />
                 </View>
+                <TouchableOpacity style = {styles.but}>
                 <TouchableOpacity style =  {styles.bot} onPress={saveTask}>
                     <Text style = {styles.text}>Guardar</Text>
                 </TouchableOpacity>
-
+                <TouchableOpacity style =  {styles.bot} onPress={cancelTask}>
+                    <Text style = {styles.text}>Cancelar</Text>
+                </TouchableOpacity>
+                </TouchableOpacity>
             </View>
         </View>
 
@@ -98,14 +90,20 @@ const styles = StyleSheet.create({
         borderColor: "#ccc",
         borderRadius:5
     },
+    but:{
+        flexDirection: "row",
+        alignItems: 'center',
+        justifyContent: 'center',
+        
+    },
     bot:{
-        alignItems: "center",
+        alignItems: 'center',
+        justifyContent: 'center',
         backgroundColor: "#e9967a",
         marginTop : 4,
         padding: 12,
+        margin:6,
         borderRadius: 5,
-        width: "100%"
-
     },
     text:{
         fontSize: 16,

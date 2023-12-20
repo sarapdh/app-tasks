@@ -5,7 +5,6 @@ import { StyleSheet } from 'react-native';
 
 import Tasks from "./Tasks";
 import NewTask from "./NewTask";
-import Login from './Login';
 
 const Tab = createMaterialBottomTabNavigator();
 
@@ -43,18 +42,6 @@ const Menu = () =>{
                         
                     }}
                     />
-                    <Tab.Screen
-                    name = "Login"
-                    component = {Login}
-                    options = {{
-                        tabBarLabel: "Login",
-                        tabBarIcon: ()=>(
-                            <MaterialCommunityIcons name = "login" Color="#000000" size={24}/>
-                        )
-                    }}
-                    />
-
-
             </Tab.Navigator>
     )
 }
