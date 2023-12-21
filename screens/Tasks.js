@@ -4,7 +4,6 @@ import Constants from "expo-constants";
 import { collection, onSnapshot, updateDoc, doc, deleteDoc } from "firebase/firestore";
 import { db } from "../firebase";
 import BouncyCheckbox from "react-native-bouncy-checkbox";
-import { FontAwesome } from "@expo/vector-icons"; 
 
 const Tasks = () => {
   const [data, setData] = useState([]);
@@ -51,7 +50,7 @@ const Tasks = () => {
     const lastPress = item.lastPress || 0;
 
     if (now - lastPress < DOUBLE_PRESS_DELAY) {
-      deleteTask(item.id);
+      deleteTask(item.id);//Esta parte no llego a funcionar
     } else {
       toggleTaskCompletion(item.id, isCheckedMap[item.id] || false);
     }
@@ -156,7 +155,7 @@ const styles = StyleSheet.create({
     width: "80%",
   },
   deleteText:{
-    fontSize:12,
+    fontSize:14,
     color:"red",
     fontWeight: "bold"
   }
